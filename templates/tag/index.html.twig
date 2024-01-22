@@ -1,0 +1,43 @@
+{% extends 'backoffice.html.twig' %}
+
+{% block title %}Hello tagController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+
+    <div>{{ form(form) }}</div>
+
+    <div>
+    {% if tags | length > 0 %}
+    
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">Nom</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+        {% for tag in tags %}
+    <tr>
+      <th scope="row">{{ tag.id}}</th>
+      <td>{{ tag.title }}</td>
+      <td>
+      <a href="{{ url('admin_tag_update', {'id' : tag.id})}}" class="btn btn-warning" >Modifier</a>
+      <a href="{{ url('admin_tag_delete', {'id' : tag.id})}}" class="btn btn-danger" onclick= "return confirm('Etes vous sur de supprimer ?')">Supprimer</a></td>
+    </tr>
+        {% endfor %} 
+  </tbody>
+</table>
+{% else %}
+    <p>Aucun tag pour l'instant</p>
+{% endif %}          
+    </div>
+</div>
+{% endblock %}
