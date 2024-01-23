@@ -24,9 +24,10 @@
     <label for="rememberme">Se souvenir de moi</label><br>
     
     <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+           value="{{ csrf_token('authenticate') }}">
 
+        {# sert à se connecter uniuqmeent via le formulaire #}
+        
     <button class="btn btn-lg btn-primary" type="submit">
         Se connection
     </button>

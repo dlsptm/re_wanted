@@ -72,12 +72,6 @@ class SecurityController extends AbstractController
 
 
                 $user->setActive(0);
-                $user->setRoles(['ROLE_USER']);
-          
-             
-
-                // on crée une instance de la classe user à laquelle on passe ces valeurs
-
 
                 // On persiste les valeurs
                 $manager->persist($user);
