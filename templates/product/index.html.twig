@@ -39,7 +39,7 @@
             <td>{% for tag in product.tags %} {{ tag.title }} {% endfor %}</td>
             <td>
                 <a href="{{url('admin_product_update', {'id': product.id})}}" class="btn btn-warning">Modifier</a>
-                <a href="{{ url('admin_product_delete', {'id': product.id}) }}" class="btn btn-danger" onclick= "return confirm('Vous êtes sûr de vouloir supprimer?')">Supprimer</a>
+                <a href="{{ url('admin_product_delete', {'id': product.id}) }}" class="btn btn-danger" onclick= "return confirm('Vous êtes sûr de vouloir supprimer?')">Supprimer </a>
             </td>
         </tr>
         {% endfor %}
