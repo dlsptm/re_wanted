@@ -7,42 +7,33 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class UserType extends AbstractType
+class NewPasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nickname', TextType::class, [
-                'label' => 'Pseudo',
-                'required' => true,
-                'constraints' => [
-                    new Length(
-                        ['min' => 3, 
-                        'max' => 15, 
-                        'minMessage' => 'Pas moins de {{ limit }} caractères', 
-                        'maxMessage' => 'Pas plus de {{ limit }} caractères'
-                        ])
-                    ],
-    
-            ])
-            ->add('email', TextType::class)
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les champs ne sont pas identiques.',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options'  => ['label' => 'Mot de passe'],
+                'first_options'  => ['label' => 'Nouveau mot de passe'],
                 'second_options' => ['label' => 'Confirmation du mot de passe'],
-                'constraints' => [new Length(['min' => 3, 'max' => 14])],
-            ])
-            ->add('submit', SubmitType::class, [
+                'constraints' => [
+                    new Length(['min' => 3, 'max' => 20, 'minMessage' => 'Le mot de passe doit avoir au moins {{ limit }} caractères.', 'maxMessage'=>'Le mot de passe ne doit pas faire moins de {{ limit }} caractères']), 
+                    new NotBlank([
+                        'message'=> 'champs obligatoires'
+                    ])],
+        ])
+            ->add('submit',SubmitType::class, [
                 'label' => 'Valider'
-            ]);
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

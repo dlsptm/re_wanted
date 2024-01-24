@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Media;
 use App\Entity\Product;
+use App\Form\MediaType;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -54,7 +56,13 @@ class ProductController extends AbstractController
                 // On exécute la transaction
                 $manager->flush();
 
-                return $this->redirectToRoute('admin_product');
+                if ($id) {
+                    $this->addFlash('success', 'Votre produit a bien été modifié');
+                } else {
+                    $this->addFlash('success', 'Votre produit a bien été ajouté');
+
+                    return $this->redirectToRoute('media_create', ['id' => $product->getId()] );
+                }
             }
 
 
@@ -75,4 +83,47 @@ class ProductController extends AbstractController
                 return $this->redirectToRoute('admin_product');
                }
            }
+
+ // méthode sur laquelle on est redirigée après la création d'un produit
+    // l'id est l'id du product pour mettre en liens le média avec le produit
+    #[Route('/media/create/{id}', name: 'media_create')]
+    public function media_create(Request $request, EntityManagerInterface $manager, ProductRepository $repository, $id): Response
+    {
+        $media = new Media();
+
+        $form = $this->createForm(MediaType::class, $media);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $product = $repository->find($id);
+
+            $file = $form->get('src')->getData();
+
+            $nbMedia = count($product->getMedias()) + 1;
+            
+            $filename= date('d-m-Y-H-i-s').'-'.$product->getTitle().$nbMedia.'.'.$file->getClientOriginalExtension();
+
+            $file->move($this->getParameter('upload_dir'), $filename);
+            
+
+            $media->setSrc($filename);
+            $media->setTitle($product->getTitle().($nbMedia));
+
+            // On persiste les valeurs 
+            $manager->persist($media);
+
+
+            $product->addMedia($media);
+            $manager->persist($product);
+
+            $manager->flush();
+        }
+    
+        return $this->render('product/media_create.html.twig',[
+            'form' => $form->createView(),
+            'medias' => $media
+        ]);
+    
+    } 
 }

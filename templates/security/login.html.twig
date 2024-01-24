@@ -21,14 +21,14 @@
     <input type="password" name="password" id="password" class="form-control" autocomplete="current-password" required>
     <label for="password">Mot de passe</label><br>
     <input type="checkbox" name="_remember_me" id="rememberme">
-    <label for="rememberme">Se souvenir de moi</label><br>
+    <label for="rememberme">Se souvenir de moi</label>
     
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}">
 
         {# sert à se connecter uniuqmeent via le formulaire #}
-        
-    <button class="btn btn-lg btn-primary" type="submit">
+        <a href="{{ path('reset_password') }}" class="text-dark">Mot de passe oublié ?</a><br>
+    <button class="btn btn-lg btn-primary my-2" type="submit">
         Se connection
     </button>
 </form>

@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\NewPasswordType;
 use App\Form\UserType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -68,17 +70,25 @@ class SecurityController extends AbstractController
             $user->setPassword(
                 $pass->hashPassword(
                     $user,
-                    $form->get('password')->getData()
+                    $user->getPassword()
                 )
             );
 
                 $user->setActive(0);
+
+                // on appelle la méthode generateToken afin de générer une chaine de caratcères aléatoire et unique
+                $token = $this->generateToken();
+
+                // on l'affecte à notre utilisateur
+                $user->setToken($token);
 
                 // On persiste les valeurs
                 $manager->persist($user);
 
                 // On exécute la transaction
                 $manager->flush();
+
+                $this->addFlash('success', 'Votre compte a bien été crée, allez vite l\'activer');
 
                   // on injecte la dépendance mailer
             $email = (new TemplatedEmail())
@@ -107,4 +117,101 @@ class SecurityController extends AbstractController
             'form' => $form->createView(),
            ]);
     }
+
+    private function generateToken()
+    {
+        // rtrim supprime les espaces en fin de chaine de caractère
+        // strtr remplace des occurences dans une chaine ici +/ et -_ (caractères récurent dans l'encodage en base64) par des = pour générer des url valides
+        // ce token sera utilisé dans les envoie de mail pour l'activation du compte ou la récupération de mot de passe
+        return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+    }
+
+
+    // Méthode d'entrée au click de validation du compte
+    #[Route('/validate-account/{token}', name: 'validate_account')]
+     public function validate_account ($token, UserRepository $repository, EntityManagerInterface $manager)
+    {
+        //on requeter un utilisateur sur son token
+
+        $user= $repository->findOneBy(['token' => $token]);
+        
+        // si on a un résulta, on passe du coup, sa propriété active à 1 et son token à null, on  persist, execute, et redirige vers la page de connexion
+        
+        if ($user) {
+            $user->setToken(null);
+            $user->setActive(1);
+            $manager->persist($user);
+            $manager->flush();
+            $this->addFlash('success', 'Féliciation, votre compte a bien été activé. Vous pouvez dès à présent vous connecter.');
+        } else {
+            $this->addFlash('danger', 'Une erreur s\'est produire, merci de rééssayer.');
+        }
+
+        return $this->redirectToRoute('app_login');
+    }
+
+
+    // méthode pour reset mot de passe pour accéder au formulaire de la saisie de l'email et généré du coup l'envoi d'un mail de réinitialisation
+
+   #[Route('/reset-password', name: 'reset_password')]
+    public function reset_password (Request $request, UserRepository $repository, EntityManagerInterface $manager):Response
+   {
+    // réccupération de la saisie formulaire 
+    $email=$request->request->get('email', '');
+
+    if (!empty($email))
+    {
+        // requete de user par son email
+        $user=$repository->findOneBy(['email' => $email]);
+
+        // si on a un utilisateur et que son compte est actif, on procède à l'envoi de l'email
+
+        if($user && $user->getActive() == 1)
+        {
+            // on génère un token un token
+            $user->setToken($this->generateToken());
+
+            $manager->persist($user);
+            $manager->flush();
+        }
+    }
+
+    return $this->render('security/reset_password.html.twig', [
+
+    ]);
+   }
+
+   #[Route('/new-password/{token}', name: 'newpassword')]
+   public function newPassword($token, UserRepository $repo, Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher)
+   {
+       // on récupère un user par son token
+       $user = $repo->findOneBy(['token' => $token]);
+       if ($user) {
+           // si il y a on créé le formulaire de reset password
+           $form = $this->createForm(NewPasswordType::class, $user);
+           $form->handleRequest($request);
+
+           if ($form->isSubmitted() && $form->isValid()) {
+               // on hash le nouveau mdp
+               $user->setPassword(
+                   $userPasswordHasher->hashPassword(
+                       $user,
+                       $form->get('plainPassword')->getData()
+                   )
+               );
+               // on repasse le token à null
+               $user->setToken(null);
+               $entityManager->persist($user);
+               $entityManager->flush();
+               $this->addFlash('success', "Votre mot de passe a bien été modifié");
+               return $this->redirectToRoute('app_login');
+           }
+
+           return $this->render('security/newPassword.html.twig', [
+               'form' => $form->createView()
+           ]);
+       }
+   }
+
+
 }

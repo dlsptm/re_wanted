@@ -9,17 +9,18 @@
   <div class="container d-flex justify-content-between">
   {% for product in products %}
  <div class="card" style="width: 18rem;">
-  <img class="card-img-top" src="../img/robe_pull_rouge.webp" alt="Card image cap">
+ {% for media in product.medias %}
+  
+  <img class="card-img-top" src="../upload/{{ media.src }}" alt="{{ media.title }}">
+ {% endfor %}
   <div class="card-body">
     <h4 class="card-title">{{ product.title }}</h4>
     <h5 class="card-text">{{ product.price }}€</h5>
-    <p class="card-text">{{ product.description }}</p>
-    <p class="card-text">{{ product.category.title }}</p>
     {% for tag in product.tags %}
       <span class="card-text">#{{ tag.title }}</span>
     {% endfor %}
     
-    <div><a href="{{ url('home_product', {'id' : product.id})}}" class="btn btn-primary">Go somewhere</a></div>
+    <div class="my-2"><a href="{{ url('home_product', {'id' : product.id})}}" class="btn btn-primary">Details</a></div>
   </div>
 </div>
     

@@ -14,7 +14,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(['email'], message :'Cet email existe déjà.')]
-#[UniqueEntity(['nickname'], message :'Ce pseudo existe déjà.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
