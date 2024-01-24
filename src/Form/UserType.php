@@ -5,10 +5,12 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 class UserType extends AbstractType
 {
@@ -16,16 +18,31 @@ class UserType extends AbstractType
     {
         $builder
             ->add('nickname', TextType::class, [
-                'label' => 'Pseudo'
+                'label' => 'Pseudo',
+                'required' => true,
+                'constraints' => [
+                    new Length(
+                        ['min' => 3, 
+                        'max' => 15, 
+                        'minMessage' => 'Pas moins de {{ limit }} caractères', 
+                        'maxMessage' => 'Pas plus de {{ limit }} caractères'
+                        ])
+                    ],
+    
             ])
             ->add('email', TextType::class)
-            ->add('password', PasswordType::class, [
-                'label' => 'Mot de passe'
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'Les champs ne sont pas identiques.',
+                'options' => ['attr' => ['class' => 'password-field']],
+                'required' => true,
+                'first_options'  => ['label' => 'Mot de passe'],
+                'second_options' => ['label' => 'Confirmer mot de passe'],
+                'constraints' => [new Length(['min' => 3, 'max' => 14])],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Valider'
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

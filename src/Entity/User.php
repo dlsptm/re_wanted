@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,6 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(['email'], message :'Cet email existe déjà.')]
+#[UniqueEntity(['nickname'], message :'Ce pseudo existe déjà.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -24,6 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $nickname = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Email(message: 'Email {{ value }} est invalide')]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]

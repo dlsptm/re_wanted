@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -37,9 +39,9 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/signup', name: 'app_signup')]
-     public function signup (Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $pass):Response
+     public function signup (Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $pass, MailerInterface $mailer
+     ):Response
     {
-        
 
             // génération de formulaire à partir de la classe userFormType
             $form = $this->createForm(UserType::class);
@@ -70,7 +72,6 @@ class SecurityController extends AbstractController
                 )
             );
 
-
                 $user->setActive(0);
 
                 // On persiste les valeurs
@@ -78,6 +79,25 @@ class SecurityController extends AbstractController
 
                 // On exécute la transaction
                 $manager->flush();
+
+                  // on injecte la dépendance mailer
+            $email = (new TemplatedEmail())
+            ->from('dlsptm6981@gmail.com')
+            ->to($user->getEmail())
+            ->subject('Bienvenue chez Re-Wanted!')
+
+            // path of the Twig template to render
+            ->htmlTemplate('email/validateAccount.html.twig')
+
+            // change locale used in the template, e.g. to match user's locale
+            ->locale('fr')
+
+            // pass variables (name => value) to the template
+            ->context([
+                'user' => $user
+            ]);   
+
+            $mailer->send($email); 
 
                 return $this->redirectToRoute('app_login');
             }
