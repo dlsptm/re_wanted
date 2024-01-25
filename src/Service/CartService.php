@@ -107,10 +107,16 @@ use Symfony\Component\HttpFoundation\RequestStack;
     {
 
       $total=0;
+      $expeditionfee = 4.5;
 
       foreach ($this->getCartWithData() as $data)
       {
+
         $total += $data['product']->getPrice() * $data['quantity'];
+
+        if ($total < 60) {
+          $total+=$expeditionfee;
+        }
       }
     return $total;
     }

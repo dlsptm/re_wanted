@@ -213,5 +213,14 @@ class SecurityController extends AbstractController
        }
    }
 
+   #[Route('/user', name: 'user_management')]
+    public function user_management (UserRepository $repository):Response
+   {
 
+    $users = $repository->findAll();
+
+   return $this->render('security/user_management.html.twig', [
+        'users' => $users
+   ]);
+   }
 }
