@@ -61,8 +61,6 @@ class StripePayController extends AbstractController
         return $this->redirect($session->url, 303);
     }
 
-
-
     // url de succes, ici on peu valider la commande
     #[Route('/commande/{success}', name: 'commande')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
