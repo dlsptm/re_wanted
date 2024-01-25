@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
         $cart[$id]=1;
       } else {
         //on incrémente la quantité
-        $cart['$id']++;
+        $cart[$id]++;
       }
 
       // on met à jour la session
@@ -51,7 +51,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
       if (isset($cart[$id]) && $cart[$id] > 1) 
       {
         //on décrémente la quantité
-        $cart['$id']--;
+        $cart[$id]--;
       } else {
         // on supprime totalement l'entrée ayant cet id
         unset($cart[$id]);
@@ -95,7 +95,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
       foreach($cart as $id => $quantity)
       {
-        $cartWithData=[
+        $cartWithData[]=[
           'product'=>$this->repository->find($id),
           'quantity'=>$quantity
         ];

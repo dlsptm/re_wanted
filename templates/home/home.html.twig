@@ -8,6 +8,25 @@
 
   <div class="container d-flex justify-content-between">
   {% for product in products %}
+  
+  {% set add = false %}
+  
+  {% if app.session.get('cart') is defined and app.session.get('cart') is not empty %}
+    
+    {% for id,quantity in app.session.get('cart') %}
+     
+      {% if id == product.id %}
+        
+        {% set add = true %}
+        {% set nb = quantity %}
+      
+      {% endif %}
+    
+    {% endfor %}
+
+  {% endif %}
+  
+
     <div class="card" style="width: 18rem;">
     {% for media in product.medias %}
       <img class="card-img-top" src="../upload/{{ media.src }}" alt="{{ media.title }}">
@@ -20,7 +39,14 @@
       {% endfor %}
     
       <div class="my-2"><a href="{{ url('home_product', {'id' : product.id})}}" class="btn btn-primary">Details</a>
-      <a href="{{ url('add_cart', {'id' : product.id})}}" class="btn btn-warning">Ajouter au panier</a></div>
+      
+      {% if add %}
+        <button class="btn btn-warning">Déjà ajouté au panier</button>      
+        {% else %}
+        
+      <a href="{{ url('add_cart', {'id' : product.id, 'target' : 'home'})}}" class="btn btn-warning">Ajouter au panier</a>
+            {% endif %}
+            </div>
     </div>
   </div> 
   {% endfor %}

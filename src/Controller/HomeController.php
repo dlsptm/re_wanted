@@ -11,12 +11,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function home(ProductRepository $repository): Response
+    public function home(ProductRepository $repository, CartService $cartService): Response
     {
             $products = $repository->findAll();
+            $cart = $cartService->getCartWithData();
+
 
         return $this->render('home/home.html.twig', [
-            'products' => $products
+            'products' => $products,
+            'cart'=>$cart
         ]);
     }
 
@@ -32,20 +35,21 @@ class HomeController extends AbstractController
     }
     
 
-    #[Route('/cart/add/{id}', name: 'add_cart')]
-     public function cart_add (CartService $cartService, $id):Response
+    #[Route('/cart/add/{id}/{target}', name: 'add_cart')]
+     public function cart_add (CartService $cartService, $id, $target):Response
     {   
         $cartService->add($id);
-        return $this->redirectToRoute('home');
+        $this->addFlash('success', 'Produit ajouté au panier');
+        return $this->redirectToRoute($target);
     }
     
 
-    #[Route('/cart/remove/{id}', name: 'remove_cart')]
-     public function cart_remove (CartService $cartService, $id):Response
+    #[Route('/cart/remove/{id}/{target}', name: 'remove_cart')]
+     public function cart_remove (CartService $cartService, $id, $target):Response
     {
 
         $cartService->remove($id);
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute($target);
     }
 
 
@@ -53,7 +57,7 @@ class HomeController extends AbstractController
      public function cart_delete (CartService $cartService, $id):Response
     {
         $cartService->delete($id);
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('cart');
     }
 
 
@@ -65,8 +69,14 @@ class HomeController extends AbstractController
     }
 
     #[Route('/cart', name: 'cart')]
-     public function cart (CartService $cartService):Response
+     public function cart (CartService $cartService,):Response
     {
-    return $this->render('home/home.html.twig');
+        $cart = $cartService->getCartWithData();
+        $total = $cartService->getTotal();
+
+    return $this->render('home/cart.html.twig', [
+         'cart' => $cart,
+         'total' => $total
+    ]);
     }
 }
