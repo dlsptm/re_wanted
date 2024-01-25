@@ -1,0 +1,23 @@
+ {% extends 'base.html.twig' %}
+
+{% block body %}
+{% if app.user %}
+  <h1>Hello <em>{{ app.user.nickname }}</em> </h1>
+{% endif %}
+
+<div class="card mb-3">
+  <img src="{{ asset('upload/'~product.medias[0].src) }}" class="card-img-top" alt="{{ product.title }}">
+  <div class="card-body">
+    <h4 class="card-title">{{ product.title }}</h4>
+    <h5 class="card-text">{{ product.price }}$</h5>
+    <p class="card-text">{{ product.description }}</p>
+    <p class="card-text">
+    {% for tag in product.tags %}
+            #{{tag.title}}
+        {% endfor %}
+    </p>
+  </div>
+</div>
+
+
+{% endblock %} 

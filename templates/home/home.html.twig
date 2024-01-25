@@ -8,24 +8,22 @@
 
   <div class="container d-flex justify-content-between">
   {% for product in products %}
- <div class="card" style="width: 18rem;">
- {% for media in product.medias %}
-  
-  <img class="card-img-top" src="../upload/{{ media.src }}" alt="{{ media.title }}">
- {% endfor %}
-  <div class="card-body">
-    <h4 class="card-title">{{ product.title }}</h4>
-    <h5 class="card-text">{{ product.price }}€</h5>
-    {% for tag in product.tags %}
-      <span class="card-text">#{{ tag.title }}</span>
+    <div class="card" style="width: 18rem;">
+    {% for media in product.medias %}
+      <img class="card-img-top" src="../upload/{{ media.src }}" alt="{{ media.title }}">
     {% endfor %}
+    <div class="card-body">
+      <h4 class="card-title">{{ product.title }}</h4>
+      <h5 class="card-text">{{ product.price }}€</h5>
+      {% for tag in product.tags %}
+        <span class="card-text">#{{ tag.title }}</span>
+      {% endfor %}
     
-    <div class="my-2"><a href="{{ url('home_product', {'id' : product.id})}}" class="btn btn-primary">Details</a></div>
-  </div>
-</div>
-    
+      <div class="my-2"><a href="{{ url('home_product', {'id' : product.id})}}" class="btn btn-primary">Details</a>
+      <a href="{{ url('add_cart', {'id' : product.id})}}" class="btn btn-warning">Ajouter au panier</a></div>
+    </div>
+  </div> 
   {% endfor %}
-</div>
 
 
 {% endblock %}
