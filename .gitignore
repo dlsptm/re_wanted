@@ -26,4 +26,4 @@
 ###< symfony/asset-mapper ###
 
 
-src/Controller/StripePayController.php
+/src/Controller/StripePayController.php
