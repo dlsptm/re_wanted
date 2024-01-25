@@ -59,8 +59,6 @@ class StripePayController extends AbstractController
         ]);
 
         return $this->redirect($session->url, 303);
-
-
     }
 
 
@@ -86,8 +84,6 @@ class StripePayController extends AbstractController
                 $purchase->setQuantity($item['quantity']);
                 $purchase->setProduct($item['product']);
                 $manager->persist($purchase);
-
-
             }
 
             $manager->flush();
@@ -102,9 +98,5 @@ class StripePayController extends AbstractController
             return $this->redirectToRoute('cart');
 
         }
-
-
     }
-
-
 }
