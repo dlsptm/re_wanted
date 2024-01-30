@@ -7,10 +7,10 @@
     <table class="table table-dark table-striped mt-5 w-75 mx-auto">
         <thead>
         <tr>
+            <th>Aperçu</th>
             <th>Produit</th>
             <th>Prix unitaire</th>
             <th>Catégorie</th>
-            <th>Aperçu</th>
             <th class="text-center">Actions</th>
         </tr>
         </thead>
@@ -18,10 +18,10 @@
 
         {% for c in cart %}
             <tr>
+                <td><img src="{{ asset('upload/'~c.product.medias[0].src) }}" width="90" alt="{{ c.product.title }}"></td>
                 <td>{{ c.product.title }}</td>
                 <td>{{ c.product.price }}€</td>
                 <td>{{ c.product.category.title }}</td>
-                <td><img src="{{ asset('upload/'~c.product.medias[0].src) }}" width="90" alt="{{ c.product.title }}"></td>
                 <td class="text-center  ">
                     <a href="{{ path('remove_cart', {'id': c.product.id, 'target': 'cart'}) }}" class="btn btn-light text-dark">-</a>
                     <input class="rounded w-25 fw-bold text-center" type="text" value="{{ c.quantity }}" readonly>
@@ -30,7 +30,6 @@
 
                     <a href="{{ path('delete_cart', {'id': c.product.id}) }}"
                        class="d-block mx-auto mt-1 w-50 btn btn-warning ">Retirer du panier</a>
-
                 </td>
             </tr>
         {% endfor %}
@@ -43,8 +42,6 @@
     {% endif %}
     
     <h3>Montant total: {{ total }}€</h3>
-
-
 
         {% if app.user %}
             <a href="{{ path('app_stripe_pay') }}" class="btn btn-info">Valider ma commande</a>

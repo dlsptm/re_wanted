@@ -1,0 +1,62 @@
+{% extends 'backoffice.html.twig' %}
+
+{% block title %}Hello userController!{% endblock %}
+
+{% block body %}
+
+    {% if users | length > 0 %}
+    
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">Pseudo</th>
+      <th scope="col">Email</th>
+      <th scope="col">Active</th>
+      <th scope="col">Token</th>
+      <th scope="col">Role</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+        {% for user in users %}
+    <tr>
+      <th scope="row">{{ user.id}}</th>
+      <td>{{ user.nickname }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.active }}</td>
+      <td>{{ user.token }}</td>
+      <td>{% for role in user.roles %}
+      <pre>
+        {{ dump(role) }}
+      </pre>
+          {{ role }}
+      {% endfor %}</td>
+      <td>
+      {% if user.roles == ['ROLE_USER'] %}
+      
+        <a href="{{ url('users_management_role', {'id' : user.id, 'role' : 'ROLE_ADMIN'})}}" class="btn btn-info" >Passer Administrateur</a>
+
+        {% else %}
+        <a href="{{ url('users_management_role', {'id' : user.id, 'role' : 'ROLE_USER' })}}" class="btn btn-info" >Passer Utilisateur</a>
+
+
+      {% endif %}
+
+      {% if user.active == 1 %}
+
+        <a href="{{ url('users_management_active', {'id' : user.id, 'active': 0 })}}" class="btn btn-danger">Désactiver</a>
+        {% else %}
+
+        <a href="{{ url('users_management_active', {'id' : user.id, 'active': 1 })}}" class="btn btn-danger" >Activer</a>
+      {% endif %}
+      </td>
+    </tr>
+        {% endfor %} 
+  </tbody>
+</table>
+{% else %}
+    <p>Aucun user pour l'instant</p>
+{% endif %}          
+
+{% endblock %}

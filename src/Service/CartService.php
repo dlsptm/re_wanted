@@ -97,7 +97,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
       {
         $cartWithData[]=[
           'product'=>$this->repository->find($id),
-          'quantity'=>$quantity
+          'quantity'=>$quantity,
         ];
       }
       return $cartWithData;
@@ -115,13 +115,16 @@ use Symfony\Component\HttpFoundation\RequestStack;
         $total += $data['product']->getPrice() * $data['quantity'];
 
         if ($total < 60) {
+
           $total+=$expeditionfee;
+
         }
+
       }
-    return $total;
+
+      return $total;
+
     }
-
-
   }
 
 ?>

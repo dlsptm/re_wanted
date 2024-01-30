@@ -38,7 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $token = null;
 
     #[ORM\Column]
-    private ?array $roles = ['ROLE_USER'];
+    private ?array $roles = array('ROLE_USER');
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Rating::class)]
     private Collection $ratings;
@@ -122,7 +122,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */ 
     public function getRoles() : array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        //$roles[] = 'ROLE_USER';
+        return array_unique($roles);
     }
 
     /**
@@ -130,9 +132,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @return  self
      */ 
-    public function setRoles($role)
+    public function setRoles($roles)
     {
-        array_push($this->roles, $role);
+        $this->roles[] = $roles;
 
         return $this;
     }

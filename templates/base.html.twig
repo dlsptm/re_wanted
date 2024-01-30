@@ -1,78 +1,272 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" integrity="sha512-b2QcS5SsA8tZodcDtGRELiGv5SaKSk1vDHDaQRda0htPYWZ6046lr3kJ5bAAQdpV2mmA/4v0wQF9MyU6/pDIAg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        {% block stylesheets %}
-        {% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" integrity="sha512-b2QcS5SsA8tZodcDtGRELiGv5SaKSk1vDHDaQRda0htPYWZ6046lr3kJ5bAAQdpV2mmA/4v0wQF9MyU6/pDIAg==" crossorigin="anonymous" referrerpolicy="no-referrer"/> {% block stylesheets %}{% endblock %}
 
-        {% block javascripts %}
-{% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ path('home') }}">Re-Wanted</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ path('home') }}">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Compte
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            <div class="dropdown-divider">
+		{% block javascripts %}
+		{#        {% block importmap %}{{ importmap('app') }}{% endblock %}#}{% endblock %}
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg bg-body-tertiary w-100 ">
+			<div class="container-fluid w-100">
+				<a class="navbar-brand" href="{{ path('home') }}">Navbar</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse w-100 d-flex justify-content-between" id="navbarNavDropdown">
+					<ul class="navbar-nav">
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="{{ path('home') }}">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">Features</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">Pricing</a>
+						</li>
+						{% if app.user %}
 
-                            </div>  <li><a class="dropdown-item" href="{{ path('dashboard') }}">Accès Backoffice </a>
-                            </li>
-                        </ul>
-                    
-                    </li>
-                    <li class="nav-item m-end-5 "><a href="{{ path('cart') }}" class="btn btn-warning">Panier</a></li>
+							<li class="nav-item dropdown me-5">
+								<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									Compte
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a class="dropdown-item" href="#">Action</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="#">Another action</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="#">Something else here</a>
+									</li>
 
-                    {% if app.user %}
-                    <li class='nav-item'><a class="nav-link btn btn-warning" href="{{ path('app_logout') }}">Déconnection</a></li>
+									{% if is_granted('ROLE_ADMIN') %}
+										<div class="dropdown-divider"></div>
+										<li>
+											<a class="dropdown-item" href="{{ path('dashboard') }}">Accès Backoffice
+											</a>
+										</li>
+									{% endif %}
+									<div class="dropdown-divider"></div>
+									<li>
+										<a class="dropdown-item" href="">Mon Compte
+										</a>
+									</li>
 
-                    {% else %}
-                    <li class='nav-item'><a class="nav-link btn btn-warning" href="{{ path('app_login') }}">Connexion</a></li>
-                    <li class='nav-item'><a class="nav-link btn btn-info" href="{{ path('app_signup') }}">Inscription</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-<div class="container mt-4">
-    <div class="w-50 mx-auto">
-    {% for label, msgs in app.flashes %}
-        {% for msg in msgs %}
-            <div class="alert alert-{{ label }} text-center">
-                {{ msg }}
-            </div>
 
-        {% endfor %}
-    {% endfor %}
-    </div>
+								</ul>
+							</li>
+						{% endif %}
+					</ul>
 
-        {% block body %}{% endblock %}
-</div>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-    </body>
+
+					<div class="main_search">
+						<div class=" d-flex">
+							<input type="text" class="form-control" id="search" placeholder="Entrez un ou plusieur ingrédients">
+							<button id="search-btn" class=" btn btn-dark" type="submit">C'est parti !</button>
+						</div>
+						<!-- /input-group -->
+						<ul class="list-group auto_search" id="entitiesNav"></ul>
+					</div>
+
+
+					{#                <div>#}
+					{#                    <form action="">#}
+					{#                        <input id='obj-input' type="hidden" name="js_object">#}
+					{#                       #}
+					{#                    </form>#}
+					{#                </div>#}
+
+						{% if app.session.get('cart') is defined and  app.session.get('cart') is not empty%}
+							<div>
+								<a href="{{ path('cart') }}" class=" ms-5 btn btn-warning "> Voir Mon Panier</a>
+						</div>
+					{% endif %}
+					{% if not app.user %}
+						<div>
+							<a href="{{ path('app_login') }}" class=" ms-5 btn btn-success ">Connexion</a>
+							<a href="{{ path('app_signup') }}" class="btn btn-dark text-white ">Inscription</a>
+						</div>
+					{% else %}
+						<div>
+							<a href="{{ path('app_logout') }}" class=" ms-5 btn btn-success ">Déconnexion</a>
+
+						</div>
+
+					{% endif %}
+				</div>
+			</div>
+		</nav>
+		<div class="container mt-4">
+			<div class="w-50 mx-auto">
+				{% for label, msgs in app.flashes %}
+					{% for msg in msgs %}
+						<div class="alert alert-{{ label }} text-center">
+							{{ msg }}
+						</div>
+
+					{% endfor %}
+				{% endfor %}
+			</div>
+
+			{% block body %}{% endblock %}
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+		<script>
+
+			let input = document.getElementById("search");
+
+  $(function () {
+
+
+  var searchRequest = null;
+  $("#search").on("keyup", function (e) {
+  if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') {
+
+  var minlength = 3;
+  var that = this;
+  var value = $(this).val();
+  var entitySelector = $("#entitiesNav").html('');
+
+  if (value.length >= minlength) {
+  if (searchRequest != null) 
+  searchRequest.abort();
+
+  // console.log( value)
+  searchRequest = $.ajax({
+  type: "get",
+  url: "/search",
+  data: {
+  'q': value
+  },
+  dataType: "json",
+  success: function (datas) {
+
+  if (value == $(that).val()) {
+  $.each(datas, function (key, arr) {
+
+
+  $.each(arr, function (entity, result) {
+  console.log(result);
+  if (key == 'entities') { // création des <li> de suggestion
+
+  if (entity != 'error') {
+  $.each(result, function (id, title) {
+  console.log(id, title, entity)
+  entitySelector.append('<li class="list-group-item result_bar"><span class="value" id="' + entity + '-' + id + '" >' + title + ' | ' + entity + '</span></li>');
+
+  })
+
+
+  } else {
+  entitySelector.append('<li class="errorLi list-group-item result_bar">' + result + '</li>');
+  }
+  }
+  });
+
+  });
+  }
+
+  // Event mouseOver
+
+  $(".result_bar").on({
+  mouseenter: function () {
+  if (!$(this).hasClass('errorLi')) {
+  $(".result_bar").removeClass('active select')
+  $(this).toggleClass('active');
+  let mot = $(this).text()
+  $('#search').val(mot)
+  }
+  },
+  mouseleave: function () {
+  $(this).toggleClass('active');
+  $('#search').val('')
+
+  }
+  });
+
+
+  // Event click remplisage de la page
+  $("#entitiesNav").on('click', showProducts);
+
+
+  function showProducts(e) {
+
+  $.ajax({
+    type:"GET",
+    url:'/finalSearch',
+    data: {'data':e.target.id},
+    dataType: "json",
+    success: function(result) {
+      console.log(result)
+    }
+  })
+
+
+  }
+
+  // Event sur la touche entrée pour générer le même résultat qu'au click
+
+  // reset de la recherche au click sur le document
+  document.addEventListener('click', (e) => {
+  value = '';
+  entitySelector.text('');
+  })
+
+  // Preventdefault navigateur
+  document.getElementById('search').addEventListener('keydown', function (e) {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') {
+  e.preventDefault();
+  }
+  });
+
+  // Event navigation liste fleches
+
+  var k = -1;
+  input.addEventListener('keydown', (e) => {
+
+  if (e.key === 'ArrowDown' && k < $(".result_bar").length - 1) {
+
+  $(".result_bar").removeClass('active select')
+  k++
+  $('#es' + k).addClass('active select');
+
+  let mots = $('.select').text()
+  $('#search').val(mots)
+  }
+  })
+
+  input.addEventListener('keydown', (e) => {
+
+    if (e.key === 'ArrowUp' && k > 0) {
+      $(".result_bar").removeClass('active select')
+      k--
+      $('#es' + k).addClass('active select');
+
+      let mots = $('.select').text()
+      $('#search').val(mots)
+    }
+  })
+
+
+  }
+  });
+  }
+  }
+  });
+
+
+  });
+		</script>
+	</body>
 </html>

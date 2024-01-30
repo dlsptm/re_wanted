@@ -21,6 +21,38 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    public function findByPrice($value)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.price < :val')
+            ->setParameter('val', $value)
+            ->orderBy('a.price', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findByPriceCategory($value, $category)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.price < :val', "a.category = $category")
+            ->setParameter('val', $value)
+            ->orderBy('a.price', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBySearch($value)
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.title LIKE :val')
+            ->setParameter('val', '%' . $value . '%')
+            ->orderBy('p.title', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 //    /**
 //     * @return Product[] Returns an array of Product objects
 //     */
