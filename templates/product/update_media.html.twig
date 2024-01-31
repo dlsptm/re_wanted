@@ -9,14 +9,14 @@
 
   <a href="{{ path('media_create', {'id': product.id}) }}" class="btn btn-success ">Ajouter des médias</a>
 
-  <form class="row justify-content-around border p-3 m-3" action="">
+  <form action="{{ path("media_delete") }}" class="row justify-content-around border p-3 m-3" method='post'>
   {% for media in product.medias %}
     <div class="col-md-4 my-2">
       <figure class="row">
         <img src="{{ asset('upload/'~media.src) }}" alt="{{ media.title }}" width="150">
         <div class="form-check">
           <label for="medias" class="form-check-label">{{ media.title }}</label>
-          <input id='media' type="checkbox" class="form-check-input" name='medias[]' multiple>
+          <input id='medias' type="checkbox" class="form-check-input" name='medias[]' value="{{ media.id }}" multiple>
         </div>
       </figure>
     </div>

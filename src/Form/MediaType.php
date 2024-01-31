@@ -22,7 +22,7 @@ class MediaType extends AbstractType
                 'label' => 'Fichier photo en liens avec le produit',
                 'attr' => 
                 [
-                    'onChange' => 'loadfile(event)'
+                    'onChange' => 'loadFile(event)'
                 ],
                 'constraints' => 
                 [

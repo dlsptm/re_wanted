@@ -6,6 +6,7 @@ use App\Entity\Media;
 use App\Entity\Product;
 use App\Form\MediaType;
 use App\Form\ProductType;
+use App\Repository\MediaRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -117,6 +118,24 @@ class ProductController extends AbstractController
     {
 
         return $this->render('product/update_media.html.twig', compact('product'));
+    }
+
+    #[Route('/delete/media/', name: 'media_delete')]
+     public function deleteMedia (Request $request, EntityManagerInterface $manager, MediaRepository $repository):Response
+    {
+        $medias_id = $request->request->all()['medias'];
+        foreach ($medias_id as $media_id)
+        {
+            $media=$repository->find($media_id);
+            $id = $media->getProduct()->getId();
+            
+            unlink($this->getParameter('upload_dir').'/'.$media->getSrc());
+
+            $manager->remove($media);
+
+        }
+        $manager->flush();
+        return $this->redirectToRoute('product_detail', compact('id'));
     }
 
      // SUPPRESSION DES PRODUITS
