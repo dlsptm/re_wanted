@@ -124,17 +124,20 @@ class ProductController extends AbstractController
      public function deleteMedia (Request $request, EntityManagerInterface $manager, MediaRepository $repository):Response
     {
         $medias_id = $request->request->all()['medias'];
-        foreach ($medias_id as $media_id)
-        {
-            $media=$repository->find($media_id);
-            $id = $media->getProduct()->getId();
-            
-            unlink($this->getParameter('upload_dir').'/'.$media->getSrc());
+        if ($medias_id) {
+            foreach ($medias_id as $media_id)
+            {
+                $media=$repository->find($media_id);
+                $id = $media->getProduct()->getId();
+                
+                unlink($this->getParameter('upload_dir').'/'.$media->getSrc());
 
-            $manager->remove($media);
+                $manager->remove($media);
 
+            }
+
+            $manager->flush();
         }
-        $manager->flush();
         return $this->redirectToRoute('product_detail', compact('id'));
     }
     
@@ -145,10 +148,18 @@ class ProductController extends AbstractController
     {   if($id)
         {
             $product = $repository->find($id);
+            $medias=$product->getMedias();
             $manager->remove($product);
+
+            foreach($medias as $media) 
+            {
+              unlink($this->getParameter('upload_dir').'/'.$media->getSrc());
+              $manager->remove($media);
+            } 
+
             $manager->flush();
             
-            return $this->redirectToRoute('admin_product');
+            return $this->redirectToRoute('product_list');
         }
     
     }
