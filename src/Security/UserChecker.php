@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 
 class UserChecker implements UserCheckerInterface
 {
-    public function checkPreAuth(UserInterface $user)
+    public function checkPreAuth(UserInterface $user):void
     {
         // dd(!$user->isActive());
         
@@ -20,7 +20,7 @@ class UserChecker implements UserCheckerInterface
         
         if (!$user->getActive() == 1) {
             throw new CustomUserMessageAuthenticationException(
-                'Votre compte n\'est pas actif'
+                'votre compte n\'est pas actif. regardez votre boite mail ou contacter un admin'
             );
             
             // $this->addFlash('error', "votre compte n'est pas actif. regardez votre boite mail ou contacter un admin" );
@@ -29,7 +29,7 @@ class UserChecker implements UserCheckerInterface
         
     }
 
-    public function checkPostAuth(UserInterface $user)
+    public function checkPostAuth(UserInterface $user):void
     {
         $this->checkPreAuth($user);
     }

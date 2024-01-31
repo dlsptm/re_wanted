@@ -50,7 +50,7 @@ class AdminController extends AbstractController
      public function adminUpdate (UserRepository $repository, EntityManagerInterface $manager, $id = null, $role=null):Response
     {
         $user = $repository->find($id);
-        $user->setRoles($role);
+        $user->setRoles([$role]);
         $manager->persist($user);
         $manager->flush();
 

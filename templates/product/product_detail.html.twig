@@ -1,5 +1,7 @@
 {% extends 'backoffice.html.twig' %}
 
+{% block title %} Detail du produit {% endblock %}
+
 {% block body %}
 
 
@@ -26,8 +28,12 @@
             <p>{{ product.description }}</p>
         </div>
 
-
-    </div>
+        <div class="mt-5 mr-5">
+            <a href="{{ path('admin_product_update', {'id': product.id}) }}" class="btn btn-secondary">Modifier le produit</a>
+            <a href="{{ path('media_update', {'id': product.id}) }}" class="btn btn-warning">Modifier les médias</a>
+            <a href="{{ path('admin_product_update', {'id': product.id}) }}" class="btn btn-danger">Supprimer les produits</a>
+        </div>
+     </div>
 
     <script>
         let gallery=document.getElementById('gallery');

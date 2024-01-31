@@ -1,0 +1,46 @@
+{% extends 'backoffice.html.twig' %}
+
+{% block title %}Mes produits{% endblock %}
+
+{% block body %}
+    {% if products | length > 0 %}
+        <div>
+            <table class="table table-dark">
+                <tr>
+                    <th scope="col">Aperçu</th>
+                    <th scope="col">#</th>
+                    <th scope="col">Produits</th>
+                    <th scope="col">Prix</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Catégorie</th>
+                    <th scope="col">Tags</th>
+                    <th scope="col">Gérer le produit</th>
+                </tr>
+                {% for product in products %}
+                    <tr>
+                        {% for media in product.medias %}
+                            <th>
+                            <img src="{{ asset('upload/'~media.src) }}" alt="{{ media.title }}" width='80'>
+                            </th>
+                        {% endfor %}
+                        <th scope="row">{{ product.id }}</th>
+                        <td>{{ product.title }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>{{ product.description }}</td>
+                        <td>{{ product.category.title }}</td>
+                        <td>
+                            {% for tag in product.tags %}
+                                {{tag.title}}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a href="{{url('product_detail', {'id': product.id})}}" class="btn btn-warning">Gérer le produit</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% else %}
+        <p>Aucun produit pour l'instant</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier les médias{% endblock %}
+
+{% block body %}
+
+<h1>Modifier les médias de votre produit</h1>
+<a href="{{ path('product_list') }}" class='btn btn-block btn-primary m-2'>Retour vers les produits</a>
+
+  <a href="{{ path('media_create', {'id': product.id}) }}" class="btn btn-success ">Ajouter des médias</a>
+
+  <form class="row justify-content-around border p-3 m-3" action="">
+  {% for media in product.medias %}
+    <div class="col-md-4 my-2">
+      <figure class="row">
+        <img src="{{ asset('upload/'~media.src) }}" alt="{{ media.title }}" width="150">
+        <div class="form-check">
+          <label for="medias" class="form-check-label">{{ media.title }}</label>
+          <input id='media' type="checkbox" class="form-check-input" name='medias[]' multiple>
+        </div>
+      </figure>
+    </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-danger">Supprimer les médias</button>
+  </form>
+
+{% endblock %}
