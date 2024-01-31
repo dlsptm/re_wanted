@@ -1,105 +1,104 @@
 <html lang="fr">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<meta name="viewport" content="width=device-width">
-		<title>Bienvenue chez Wanted!</title>
-		<style>
-			body {
-				margin: 0;
-				padding: 0;
-				background-color: #f3f3f3;
-				font-family: Helvetica, Arial, sans-serif;
-			}
-			h1 {
-				border-radius: 5px;
-				border: 2px solid #2671a3;
-				background-color: #000000;
-				color: #ffffff;
-				padding: 30px 0 50px;
-				font-weight: normal;
-			}
-			hr {
-				border: none;
-				border-top: 3px solid #264459;
-				margin: 20px;
-			}
-			.container {
-				background-color: #fefefe;
-				width: 580px;
-				margin: 0 auto;
-			}
-			.bottom {
-				border-radius: 5px;
-				border: 2px solid #45B7FF;
-				background-color: #000000;
-			}
-			.block {
-				margin: 0;
-				padding: 10px 20px 20px;
-        text-align: center;
-			}
-			.logo {
-				width: 100%;
-			}
-			.text-center {
-				text-align: center;
-			}
-			.bienvenue {
-				color: #fefefe;
-			}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Bienvenue chez Wanted!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f3f3f3;
+            font-family: Helvetica, Arial, sans-serif;
+        }
 
-			.btn {
-				display: inline-block;
-				padding: 10px 20px;
-				background-color: #FD4BF2;
-				color: #fefefe;
-				border: 1px solid #fff;
-				border-radius: 15px;
-				font-size: 20px;
-				font-weight: bold;
-				text-decoration: none;
-			}
-		</style>
-	</head>
+        h1 {
+            border-radius: 5px;
+            border: 2px solid #2671a3;
+            background-color: #000000;
+            color: #ffffff;
+            padding: 30px 0 50px 0;
+            font-weight: normal;
+        }
 
-	<body>
-		<div class="body">
-			<div class="container">
+        hr {
+            border: none;
+            border-top: 3px solid #264459;
+            margin: 20px;
+        }
 
-				<div class="content">
-					<h1 class="text-center">Bonjour
-						{{user.nickname}}!</h1>
-					<p class="block">
-						Bienvenue chez
-						<strong>Wanted</strong>,
+        .container {
+            background-color: #fefefe;
+            width: 580px;
+            margin: 0 auto;
+        }
 
-          {# cid:logo pour détecter l'image dans le mailing #}
-            <img src="cid:logo" width="200" alt="">
+        .bottom {
+            border-radius: 5px;
+            border: 2px solid #45B7FF;
+            background-color: #000000;
+        }
 
-						{{ content | raw }}
+        .block {
+            margin: 0;
+            padding: 10px 20px 20px 20px;
+            text-align: center;
+        }
 
-					</p>
-					<p class="block text-center">
+        .logo {
+            width: 100%;
+        }
 
-						{% if param %}
-							<a href="{{ url(route, {"token": param}) }}" class="btn">Confirmer mon inscription!</a>
+        .text-center {
+            text-align: center;
+        }
 
-						{% else %}
+        .bienvenue {
+            color: #fefefe;
+        }
 
-							<a href="{{ url(route) }}" class="btn">Confirmer mon inscription!</a>
-						{% endif %}
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: FD4BF2;
+            color: #fefefe;
+            border: 1px solid #fff;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="body">
+    <div class="container">
 
-					</p>
+        <div class="content">
+            <h1 class="text-center">Bonjour {{ user.nickname }}!</h1>
+            <p class="block">
+                <img src="cid:logo" width="200" alt="">
+                <h2>Bienvenue chez <strong>Wanted</strong>,</h2>
+                {{ content | raw }}
+            </p>
+            <p class="block text-center">
+
+                {% if paramName=='token' %}
+                    <a href="{{ url( route, {  'token': param}) }}" class="btn">{{ button }}</a>
+                {% else %}
+                    <a href="{{ url(route) }}" class="btn">{{ button }}</a>
+                {% endif %}
+
+            </p>
 
 
-				</div>
-				<div class="footer">
+        </div>
+        <div class="footer">
 
-					<p class="block bottom text-center bienvenue">
-						Envoyé par Wanted
-					</p>
-				</div>
-			</div>
-		</div>
-	</body>
+            <p class="block bottom text-center bienvenue">
+                Envoyé par Wanted
+            </p>
+        </div>
+    </div>
+</div>
+</body>
 </html>

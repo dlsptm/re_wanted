@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\ProductRepository;
+use App\Repository\UserRepository;
 use App\Service\CartService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -125,5 +126,15 @@ class HomeController extends AbstractController
     }
 
     return new Response(json_encode($products));
+  }
+
+  #[Route('/profile/{id}', name: 'profile')]
+   public function profile (UserRepository $repository, $id):Response
+  {
+    $user = $repository->find($id);
+
+  return $this->render('home/profile.html.twig', [
+    'user'=>$user
+  ]);
   }
 }

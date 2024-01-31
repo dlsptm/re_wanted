@@ -1,8 +1,6 @@
+# A FAIRE
 - Changement de role + activer ou désactiver le compte
 - Page Profile en front (nickname, email) -> nouveau Type en lien avec User
 - En cas de modification de mail -> désactiver le compte, envoi de mail, valider l'email, réactiver le compte
 - Gestion des commandes front et back (changer status des commandes)
-- les Avis des utilisateurs
-
-
-
+- les Avis des utilisateurs (etre utilisateur, faire une boucle, jouer avec un boulean si il a bien commandé le produit)

@@ -157,80 +157,61 @@ class SecurityController extends AbstractController
   #[Route('/reset-password', name: 'reset_password')]
   public function reset_password(Request $request, UserRepository $repository, EntityManagerInterface $manager, EmailService $emailService): Response
   {
-    // réccupération de la saisie formulaire 
-    $email = $request->request->get('email', '');
+  // récupération de la saisie formulaire ->request = $_POST, ->query = $_GET
+  $email = $request->request->get('email', '');
 
-    if (!empty($email)) {
+  if(!empty($email))
+  {
       // requete de user par son email
       $user = $repository->findOneBy(['email' => $email]);
 
-      // si on a un utilisateur et que son compte est actif, on procède à l'envoi de l'email
-
-      if ($user /*&& $user->getActive() == 1*/) {
-        // on génère un token un token
-        $user->setToken($this->generateToken());
-
-        $manager->persist($user);
-        $manager->flush();
-
-        $emailService->sendEmail(
-          $user->getEmail(),
-          'Mot de passe perdu',
-          '<p>Veuillez clicker sur le lien afin de modifier le mot de passe</p>',
-          'newpassword',
-          'Réinitialiser le mot de passe',
-          $user,
-          $user->getToken(),
-          'token',
-          $this->getParameter('img_dir')
-        );
+      // si on a utilisateur et que son compte est actif on procède à l'envoie de l'email de récupération
+      if($user && $user->getActive() === 1)
+      {
+          // on génère un token
+          $user->setToken($this->generateToken());
+          $manager->persist($user);
+          $manager->flush();
+          $emailService->sendEmail($user->getEmail(), 'Mot de passe perdu?', '<p>Veuillez clicker sur le liens ci-dessous pour réinitaliser votre mot de passe</p><p>Si vous n\'êtes pas l\'origine de cette demande merci de ne pas prendre en considération cet email et nous excuser pour la gêne</p>','new_password', 'Réinitaliser le mot de passe',$user, 'token', $this->getParameter('img_dir'));
+           return $this->redirectToRoute('home');
       }
-    }
-
-    return $this->render('security/reset_password.html.twig', []);
   }
+
+  return $this->render('security/reset_password.html.twig',[
+  
+  ]);  }
 
   #[Route('/new-password/{token}', name: 'newpassword')]
   public function newPassword($token, UserRepository $repo, Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher)
   {
     // on récupère un user par son token
     $user = $repo->findOneBy(['token' => $token]);
-    if ($user) {
-      // si il y a on créé le formulaire de reset password
-      $form = $this->createForm(NewPasswordType::class, $user);
-      $form->handleRequest($request);
 
-      if ($form->isSubmitted() && $form->isValid()) {
-        // on hash le nouveau mdp
-        $user->setPassword(
-          $userPasswordHasher->hashPassword(
-            $user,
-            $form->get('plainPassword')->getData()
-          )
-        );
-        // on repasse le token à null
-        $user->setToken(null);
-        $entityManager->persist($user);
-        $entityManager->flush();
-        $this->addFlash('success', "Votre mot de passe a bien été modifié");
-        return $this->redirectToRoute('app_login');
+    if($user)
+    {
+        $form = $this->createForm(NewPasswordType::class, $user);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            // on hash le nouveau mdp
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('password')->getData()
+                )
+            );
+            // on repasse le token à null
+            $user->setToken(null);
+            $entityManager->persist($user);
+            $entityManager->flush();
+            $this->addFlash('success', "Votre mot de passe a bien été modifié");
+           
+            return $this->redirectToRoute('app_login');
       }
-
-      return $this->render('security/newPassword.html.twig', [
-        'form' => $form->createView()
-      ]);
-    }
-  }
-
-  #[Route('/user', name: 'user_management')]
-  public function user_management(UserRepository $repository): Response
-  {
-
-    $users = $repository->findAll();
-
-    return $this->render('security/user_management.html.twig', [
-      'users' => $users
-    ]);
-  }
+    }  
+    return $this->render('security/newPassword.html.twig', [
+            'form' => $form->createView()
+        ]);
+}
 
 }

@@ -33,7 +33,7 @@
 						{% if app.user %}
 
 							<li class="nav-item dropdown me-5">
-								<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 									Compte
 								</a>
 								<ul class="dropdown-menu">
@@ -56,7 +56,7 @@
 									{% endif %}
 									<div class="dropdown-divider"></div>
 									<li>
-										<a class="dropdown-item" href="">Mon Compte
+										<a class="dropdown-item" href="{{ path('profile', {'id': app.user.id}) }}">Profile
 										</a>
 									</li>
 
