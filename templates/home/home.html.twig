@@ -28,9 +28,9 @@
   
 
     <div class="card" style="width: 18rem;">
-    {% for media in product.medias %}
-      <img class="card-img-top" src="../upload/{{ media.src }}" alt="{{ media.title }}">
-    {% endfor %}
+       {% if product.medias | length > 0 %}
+      <img src="{{ asset('upload/'~product.medias[0].src) }}" width="200" alt="{{ product.title }}" class="card-img-top">
+    {% endif %}
     <div class="card-body">
       <h4 class="card-title">{{ product.title }}</h4>
       <h5 class="card-text">{{ product.price }}€</h5>

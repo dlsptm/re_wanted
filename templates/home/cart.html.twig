@@ -18,7 +18,9 @@
 
         {% for c in cart %}
             <tr>
-                <td><img src="{{ asset('upload/'~c.product.medias[0].src) }}" width="90" alt="{{ c.product.title }}"></td>
+
+                <td>{% if product.medias | length > 0 %}
+<img src="{{ asset('upload/'~c.product.medias[0].src) }}" width="90" alt="{{ c.product.title }}">{% endif %}</td>
                 <td>{{ c.product.title }}</td>
                 <td>{{ c.product.price }}€</td>
                 <td>{{ c.product.category.title }}</td>

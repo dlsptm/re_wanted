@@ -6,8 +6,9 @@
 {% endif %}
 
 <div class="card mb-3">
-  <img src="{{ asset('upload/'~product.medias[0].src) }}" class="card-img-top" alt="{{ product.title }}">
-  <div class="card-body">
+{% if product.medias | length > 0 %}
+<img src="{{ asset('upload/'~product.medias[0].src) }}" width="90" alt="{{ product.title }}">{% endif %} 
+<div class="card-body">
     <h4 class="card-title">{{ product.title }}</h4>
     <h5 class="card-text">{{ product.price }}$</h5>
     <p class="card-text">{{ product.description }}</p>

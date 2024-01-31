@@ -137,6 +137,7 @@ class ProductController extends AbstractController
         $manager->flush();
         return $this->redirectToRoute('product_detail', compact('id'));
     }
+    
 
      // SUPPRESSION DES PRODUITS
     #[Route('/delete/{id}', name: 'admin_product_delete')]

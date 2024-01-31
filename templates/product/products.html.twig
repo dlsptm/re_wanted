@@ -18,11 +18,11 @@
                 </tr>
                 {% for product in products %}
                     <tr>
-                        {% for media in product.medias %}
-                            <th>
-                            <img src="{{ asset('upload/'~media.src) }}" alt="{{ media.title }}" width='80'>
-                            </th>
-                        {% endfor %}
+                        <th>
+                            {% if product.medias | length > 0 %}
+                            <img src="{{ asset('upload/'~product.medias[0].src) }}" width="90" alt="{{ product.title }}">
+                            {% endif %}
+                         </th>
                         <th scope="row">{{ product.id }}</th>
                         <td>{{ product.title }}</td>
                         <td>{{ product.price }}</td>

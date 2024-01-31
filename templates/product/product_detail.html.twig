@@ -10,7 +10,9 @@
 
         <div  class="col-md-7 row justify-content-between text-center">
             <div class="col-md-6 card text-center ">
-                <img src="{{ asset('upload/'~product.medias[0].src) }}" width="200" class="img-fluid" id="image" alt="{{ product.title }}">
+            {% if product.medias | length > 0 %}
+                <img src="{{ asset('upload/'~product.medias[0].src) }}" width="200"  class="card-img-top" id="image" alt="{{ product.title }}">
+            {% endif %}
             </div>
             <div class="col-md-6" id="gallery">
                 {% for media in product.medias %}
