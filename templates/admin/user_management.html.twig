@@ -27,9 +27,7 @@
       <td>{{ user.active }}</td>
       <td>{{ user.token }}</td>
       <td>{% for role in user.roles %}
-      <pre>
-        {{ dump(role) }}
-      </pre>
+
           {{ role }}
       {% endfor %}</td>
       <td>
