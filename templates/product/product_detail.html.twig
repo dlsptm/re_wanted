@@ -1,66 +1,62 @@
-{% extends 'backoffice.html.twig' %}
-
-{% block title %}
-	Detail du produit
-{% endblock %}
+{% extends 'base.html.twig' %}
 
 {% block body %}
+    <div class="row mt-3">
+        <h3 class="text-center">{{ count }} résultats dans "{{ type }}"</h3>
+        {% for product in products %}
+            {% set allready=false %}
+            {% set rate=false %}
+            {% if app.user %}
+                {% for order in app.user.orderPurchases %}
+                    {% for purchase in order.purchases %}
+                        {% if purchase.product.id == product.id %}
+                            {% set allready=true %}
+
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+
+                {% for rating in app.user.ratings %}
+                    {% if rating.product.id == product.id %}
+                        {% set rate=true %}
+                    {% endif %}
+                {% endfor %}
+
+            {% endif %}
 
 
-	<div class=" p-5 m-3 border border-1 rounded border-secondary row justify-content-between">
 
 
-		<div class="col-md-7 row justify-content-between text-center">
-			<div class="col-md-6 card text-center ">
-				{% if product.medias | length > 0 %}
-					<img src="{{ asset('upload/'~product.medias[0].src) }}" width="200" class="card-img-top" id="image" alt="{{ product.title }}">
-				{% endif %}
-			</div>
-			<div class="col-md-6" id="gallery">
-				{% for media in product.medias %}
 
-					<img src="{{ asset('upload/'~media.src) }}" class="img-thumbnail mt-1" width="100" alt="{{ media.title }}">
+            <div class="col-4 m-2 card w-25">
+                <div class="card-header text-center">
+                    {#                    <img src="{{ asset('upload/'~product.medias[0].src) }}" class="card-img-top" alt="">#}
 
 
-				{% endfor %}
-			</div>
-		</div>
-		<div class="col-md-5 border-left border-3 border-left-dark me-5 text-center">
-			<h2>{{ product.title }}</h2>
-			<h3>{{ product.price }}€</h3>
-			<h3>{{ product.category.title }}</h3>
-			<p>{{ product.description }}</p>
-		</div>
-
-		<div class="mt-5 mr-5">
-			<a href="{{ path('admin_product_update', {'id': product.id}) }}" class="btn btn-secondary">Modifier le produit</a>
-			<a href="{{ path('media_update', {'id': product.id}) }}" class="btn btn-warning">Modifier les médias</a>
-			<a href="{{ path('admin_product_delete', {'id': product.id}) }}" class="btn btn-danger">Supprimer les produits</a>
-		</div>
-	</div>
-
-	<script>
-
-let gallery = document.getElementById('gallery');
-
-let img = document.getElementById('image');
-
-gallery.addEventListener('click', changePhoto);
-
-function changePhoto(e) {
-
-  clearStyle();
-
-  img.src = e.target.src;
-  e.target.style.border = '2px solid black';
-}
-
-function clearStyle() {
-  let imgs = document.getElementsByClassName('img-thumbnail');
-  // console.log(imgs);
-  for (let img of imgs) {
-  img.style.border = '';
-  }
-}
-	</script>
+                </div>
+                <div class="card-body text-center">
+                    {% if allready is defined and allready == true %}
+                        <div class="btn btn-success my-1">Déjà commandé :)</div>
+                    {% endif %}
+                    <h2>{{ product.title }}</h2>
+                    <h3>{{ product.category.title }}</h3>
+                    <h4>{{ product.price }}€</h4>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ path('oneProduct', {'id': product.id}) }}" class="btn btn-info">Voir le détail</a>
+                    <a href="{{ path('cart_add', {'id': product.id, 'param': 'home'}) }}" class="btn btn-warning">Ajouter
+                        au panier</a>
+                    {% if  allready  and not rate %}
+                        <a href="{{ path('oneProduct', {'id': product.id}) }}" class="btn btn-secondary btn-lg my-1">Laisser
+                            un avis</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

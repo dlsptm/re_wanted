@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\OrderPurchase;
 use App\Entity\User;
 use App\Form\NewPasswordType;
 use App\Form\UserType;
+use App\Repository\OrderPurchaseRepository;
 use App\Repository\UserRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[Route(path: '/security')]
@@ -213,5 +216,44 @@ class SecurityController extends AbstractController
             'form' => $form->createView()
         ]);
 }
+
+ // profil de l'utilisateur
+ #[IsGranted('IS_AUTHENTICATED_FULLY')]
+ #[Route('/profile', name: 'profile')]
+ public function profile(): Response
+ {
+     // il manque ici le traitement du changement d'infos pour mail et nickname
+
+
+     return $this->render('security/profile.html.twig', [
+
+     ]);
+ }
+
+ // page renvoyant à l'utilisateur l'historique de ses commandes ainsi que leur statut de prise en charge
+ #[Route('/order_purchases', name: 'order_purchases')]
+ #[IsGranted('IS_AUTHENTICATED_FULLY')]
+ public function order_purchases(OrderPurchaseRepository $repository): Response
+ {
+
+     $orders = $repository->findBy(['user' => $this->getUser()], ['date' => 'DESC']);
+
+
+     return $this->render('security/order_purchases.html.twig', [
+         'orders' => $orders
+     ]);
+ }
+
+ // page de détail d'une commande
+ #[IsGranted('IS_AUTHENTICATED_FULLY')]
+ #[Route('/order_detail/{id}', name: 'order_detail')]
+ public function order_detail(OrderPurchase $order): Response
+ {
+
+
+     return $this->render('security/order_detail.html.twig', [
+         'order' => $order
+     ]);
+ }
 
 }

@@ -2,16 +2,15 @@
 
 {% block body %}
 {% if app.user %}
-  <h1>Hello <em>{{ app.user.nickname }}</em> </h1>
+  <h1>Hello <em>{{ user.nickname }}</em> </h1>
 
-  <h3>pseudo : {{ app.user.nickname }}</h3>
-  <h3>email : {{ app.user.email }}</h3>
+  <h3>pseudo : {{ user.nickname }}</h3>
+  <h3>email : {{ user.email }}</h3>
 
 
   <h3>Commandes : </h3>
-
-{% for order in app.user.order_purchase %}
-    {{ order.date }}
+{% for order in user %}
+  
 {% endfor %}
 
 

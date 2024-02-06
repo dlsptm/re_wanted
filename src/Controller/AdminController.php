@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-
+use App\Repository\OrderPurchaseRepository;
+use App\Repository\RatingRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -60,5 +61,53 @@ class AdminController extends AbstractController
     
     }
 
+
+    #[Route('/orders', name: 'orders')]
+    #[Route('/order/status/{id}/{status}', name: 'order_status_upgrade')]
+    public function orders(OrderPurchaseRepository $repository, EntityManagerInterface $manager, $id=null, $status=null): Response
+    {
+        if ($id && $status) {
+            // modification du statut transmis en paramètre
+            // pour la commande d'id transmis en paramètre
+            $order = $repository->find($id);
+            $order->setStatus($status);
+            $manager->persist($order);
+            $manager->flush();
+            $this->addFlash('success', 'Statut à jour');
+            return $this->redirectToRoute('orders');
+
+        }
+
+// récupérationde toutes les commandes par date desc
+        $orders = $repository->findBy([], ['date' => 'DESC', 'status' => 'ASC']);
+
+        return $this->render('admin/orders.html.twig', [
+            'orders' => $orders,
+            'title'=>'Gestion des commandes'
+        ]);
+    }
+
+    #[Route('/rating_moderation', name:'rating_moderation')]
+    #[Route('/publish_edit/{id}', name:'publish_edit')]
+    public function rating_moderation(RatingRepository $repository,EntityManagerInterface $manager, $id=null): Response
+    {
+
+        if ($id)
+        {
+            $rating= $repository->find($id);
+            $rating->setPublish(!$rating->isPublish());
+            $manager->persist($rating);
+            $manager->flush();
+            return $this->redirectToRoute('rating_moderation');
+
+        }
+
+        $ratings = $repository->findBy([], ['publish'=>'DESC', 'publishDate'=>'DESC']);
+
+        return $this->render('admin/rating_moderation.html.twig', [
+            'ratings' => $ratings,
+            'title'=>'Modération des avis'
+        ]);
+    }
     
 }
